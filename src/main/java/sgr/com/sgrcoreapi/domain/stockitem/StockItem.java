@@ -23,6 +23,9 @@ public class StockItem {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private StockItemMeasurementUnitEnum measurementUnit;
+
     private Boolean allowFractionalQuantity;
 
     private Double fractionalQuantity;
@@ -33,6 +36,7 @@ public class StockItem {
         var isFractional = addStockItemRequest.allowFractionalQuantity();
 
         this.name = addStockItemRequest.name();
+        this.measurementUnit = addStockItemRequest.measurementUnit();
         this.allowFractionalQuantity = isFractional;
 
         if (isFractional) {
