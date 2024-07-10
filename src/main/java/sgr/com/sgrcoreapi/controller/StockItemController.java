@@ -25,11 +25,15 @@ public class StockItemController {
     private final StockItemService service;
 
     @PostMapping
-    public ResponseEntity<NoDataApiResponse> createStockItem(@RequestBody @Valid AddStockItemRequest addStockItemRequest) {
-        service.createStockItem(addStockItemRequest);
+    public ResponseEntity<ApiResponse<StockItemDetails>> createStockItem(@RequestBody @Valid AddStockItemRequest addStockItemRequest) {
+        var createdStockItem = service.createStockItem(addStockItemRequest);
 
-        var resourceURI = HttpHelper.getCreatedResourceURI(UUID.randomUUID());
-        var response = new NoDataApiResponse(HttpStatus.CREATED.value());
+        var resourceURI = HttpHelper.getCreatedResourceURI(createdStockItem.id());
+
+        var response = new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                createdStockItem
+        );
 
         return ResponseEntity.created(resourceURI).body(response);
     }
@@ -63,11 +67,11 @@ public class StockItemController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<NoDataApiResponse> updateStockItem(@PathVariable UUID id,
+    public ResponseEntity<ApiResponse<StockItemDetails>> updateStockItem(@PathVariable UUID id,
                                                              @RequestBody @Valid UpdateStockItemRequest updateStockItemRequest) {
-        service.updateStockItem(id, updateStockItemRequest);
+        var updatedStockItem = service.updateStockItem(id, updateStockItemRequest);
 
-        var response = new NoDataApiResponse(HttpStatus.NO_CONTENT.value());
+        var response = new ApiResponse<>(HttpStatus.OK.value(), updatedStockItem);
 
         return ResponseEntity.ok(response);
     }

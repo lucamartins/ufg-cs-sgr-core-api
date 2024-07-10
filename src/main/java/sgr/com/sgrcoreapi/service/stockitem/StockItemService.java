@@ -21,7 +21,7 @@ public class StockItemService {
 
     private final StockItemRepository stockItemRepository;
 
-    public void createStockItem(AddStockItemRequest addStockItemRequest) {
+    public StockItemDetails createStockItem(AddStockItemRequest addStockItemRequest) {
         if (addStockItemRequest.allowFractionalQuantity() && addStockItemRequest.fractionalQuantity() == null) {
             throw new BadRequestException("Fractional quantity must be provided when allowing fractional quantity");
         }
@@ -33,6 +33,8 @@ public class StockItemService {
         StockItem newStockItem = new StockItem(addStockItemRequest);
 
         stockItemRepository.save(newStockItem);
+
+        return new StockItemDetails(newStockItem);
     }
 
     public void deleteStockItem(UUID stockItemId) {
@@ -40,7 +42,7 @@ public class StockItemService {
         stockItemRepository.deleteById(stockItemId);
     }
 
-    public void updateStockItem(UUID stockItemId, UpdateStockItemRequest updateStockItemRequest) {
+    public StockItemDetails updateStockItem(UUID stockItemId, UpdateStockItemRequest updateStockItemRequest) {
         var curStockItem = stockItemRepository
                 .findById(stockItemId)
                 .orElseThrow(NotFoundException::new);
@@ -48,6 +50,8 @@ public class StockItemService {
         curStockItem.setName(updateStockItemRequest.name());
 
         stockItemRepository.save(curStockItem);
+
+        return new StockItemDetails(curStockItem);
     }
 
     public StockItemDetails getStockItem(UUID stockItemId) {
