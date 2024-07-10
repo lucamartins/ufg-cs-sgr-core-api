@@ -12,6 +12,7 @@ import sgr.com.sgrcoreapi.infra.http.PagedApiResponse;
 import sgr.com.sgrcoreapi.service.stockitem.StockItemService;
 import sgr.com.sgrcoreapi.service.stockitem.dto.AddStockItemRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockItemDetails;
+import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.UpdateStockItemRequest;
 
 import java.util.UUID;
@@ -80,8 +81,16 @@ public class StockItemController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{id}/stock-movements")
-    public void createStockMovement(@PathVariable UUID id) {
-        // TODO: implement
+    @PostMapping("/{id}/movement")
+    public ResponseEntity<ApiResponse<StockItemDetails>> createStockMovement(@PathVariable UUID id,
+                                  @RequestBody @Valid StockMovementRequest stockMovementRequest) {
+        var newStockItem = service.createStockMovement(id, stockMovementRequest);
+
+        var response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                newStockItem
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sgr.com.sgrcoreapi.service.stockitem.dto.AddStockItemRequest;
+import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementRequest;
+import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementTypeEnum;
 
 import java.util.UUID;
 
@@ -32,5 +34,36 @@ public class StockItem {
         this.allowFractionalQuantity = addStockItemRequest.allowFractionalQuantity();
         this.fractionalQuantity = addStockItemRequest.fractionalQuantity();
         this.wholeQuantity = addStockItemRequest.wholeQuantity();
+    }
+
+    public boolean canProcessMovement(StockMovementRequest stockMovementRequest) {
+        if (stockMovementRequest.type() == StockMovementTypeEnum.IN) {
+            return true;
+        }
+
+        if (allowFractionalQuantity) {
+            return fractionalQuantity >= stockMovementRequest.fractionalQuantity();
+        }
+
+        return wholeQuantity >= stockMovementRequest.wholeQuantity();
+    }
+
+    public void processMovement(StockMovementRequest stockMovementRequest) {
+        if (stockMovementRequest.type() == StockMovementTypeEnum.IN) {
+            if (allowFractionalQuantity) {
+                fractionalQuantity += stockMovementRequest.fractionalQuantity();
+                return;
+            }
+
+            wholeQuantity += stockMovementRequest.wholeQuantity();
+            return;
+        }
+
+        if (allowFractionalQuantity) {
+            fractionalQuantity -= stockMovementRequest.fractionalQuantity();
+            return;
+        }
+
+        wholeQuantity -= stockMovementRequest.wholeQuantity();
     }
 }

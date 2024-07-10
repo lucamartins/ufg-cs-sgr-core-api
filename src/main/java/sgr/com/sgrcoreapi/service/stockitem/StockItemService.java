@@ -10,6 +10,7 @@ import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
 import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.stockitem.dto.AddStockItemRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockItemDetails;
+import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.UpdateStockItemRequest;
 
 import java.util.UUID;
@@ -67,5 +68,31 @@ public class StockItemService {
         var stockItemsPage = stockItemRepository.findAllByIsEmpty(isEmpty, pageableConfig);
 
         return stockItemsPage.map(StockItemDetails::new);
+    }
+
+    public StockItemDetails createStockMovement(UUID stockItemId, StockMovementRequest stockMovementRequest) {
+        var stockItem = stockItemRepository
+                .findById(stockItemId)
+                .orElseThrow(() -> new BadRequestException("Stock item not found"));
+
+        var isFractionalQuantityRequired = stockItem.getAllowFractionalQuantity();
+
+        if (isFractionalQuantityRequired && stockMovementRequest.fractionalQuantity() == null) {
+            throw new BadRequestException("Fractional quantity must be provided when stock item allows fractional quantity");
+        }
+
+        if (!isFractionalQuantityRequired && stockMovementRequest.wholeQuantity() == null) {
+            throw new BadRequestException("Whole quantity must be provided when stock item does not allow fractional quantity");
+        }
+
+        if (!stockItem.canProcessMovement(stockMovementRequest)) {
+            throw new BadRequestException("Stock item does not have enough quantity to process the movement");
+        }
+
+        stockItem.processMovement(stockMovementRequest);
+
+        stockItemRepository.save(stockItem);
+
+        return new StockItemDetails(stockItem);
     }
 }
