@@ -23,6 +23,9 @@ public class SaleItem {
 
     private Double price;
 
+    @Enumerated(EnumType.STRING)
+    private SaleItemPriceCurrencyEnum priceCurrency;
+
     @OneToMany(mappedBy = "saleItem")
     private List<StockItemAssociation> stockItemAssociations;
 }
