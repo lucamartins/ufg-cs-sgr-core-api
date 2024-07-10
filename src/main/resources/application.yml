@@ -2,8 +2,11 @@ spring:
   application:
     name: sgr-core-api
   datasource:
-    url: ${DB_URL}
     driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
