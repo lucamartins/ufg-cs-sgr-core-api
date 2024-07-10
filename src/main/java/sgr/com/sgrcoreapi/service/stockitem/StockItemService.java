@@ -22,14 +22,6 @@ public class StockItemService {
     private final StockItemRepository stockItemRepository;
 
     public StockItemDetails createStockItem(AddStockItemRequest addStockItemRequest) {
-        if (addStockItemRequest.allowFractionalQuantity() && addStockItemRequest.fractionalQuantity() == null) {
-            throw new BadRequestException("Fractional quantity must be provided when allowing fractional quantity");
-        }
-
-        if (!addStockItemRequest.allowFractionalQuantity() && addStockItemRequest.wholeQuantity() == null) {
-            throw new BadRequestException("Whole quantity must be provided when not allowing fractional quantity");
-        }
-
         StockItem newStockItem = new StockItem(addStockItemRequest);
 
         stockItemRepository.save(newStockItem);

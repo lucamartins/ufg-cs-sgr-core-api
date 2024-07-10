@@ -30,10 +30,23 @@ public class StockItem {
     private Long wholeQuantity;
 
     public StockItem(AddStockItemRequest addStockItemRequest) {
+        var isFractional = addStockItemRequest.allowFractionalQuantity();
+
         this.name = addStockItemRequest.name();
-        this.allowFractionalQuantity = addStockItemRequest.allowFractionalQuantity();
-        this.fractionalQuantity = addStockItemRequest.fractionalQuantity();
-        this.wholeQuantity = addStockItemRequest.wholeQuantity();
+        this.allowFractionalQuantity = isFractional;
+
+        if (isFractional) {
+            this.wholeQuantity = null;
+            this.fractionalQuantity = addStockItemRequest.fractionalQuantity() != null
+                    ? addStockItemRequest.fractionalQuantity()
+                    : 0.0;
+            return;
+        }
+
+        this.fractionalQuantity = null;
+        this.wholeQuantity = addStockItemRequest.wholeQuantity() != null
+                ? addStockItemRequest.wholeQuantity()
+                : 0L;
     }
 
     public boolean canProcessMovement(StockMovementRequest stockMovementRequest) {
