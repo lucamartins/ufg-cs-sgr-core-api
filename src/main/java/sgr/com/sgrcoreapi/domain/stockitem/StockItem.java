@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sgr.com.sgrcoreapi.service.stockitem.dto.AddStockItemRequest;
 
 import java.util.UUID;
 
@@ -25,4 +26,11 @@ public class StockItem {
     private Double fractionalQuantity;
 
     private Long wholeQuantity;
+
+    public StockItem(AddStockItemRequest addStockItemRequest) {
+        this.name = addStockItemRequest.name();
+        this.allowFractionalQuantity = addStockItemRequest.allowFractionalQuantity();
+        this.fractionalQuantity = addStockItemRequest.fractionalQuantity();
+        this.wholeQuantity = addStockItemRequest.wholeQuantity();
+    }
 }
