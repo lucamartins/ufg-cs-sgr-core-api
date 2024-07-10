@@ -1,4 +1,4 @@
-# Projeto API
+# Especificação API - Rascunho (v1)
 ## Endpoints
 ### User  - /users
 - Cadastrar
