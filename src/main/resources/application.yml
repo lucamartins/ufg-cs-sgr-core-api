@@ -1,4 +1,9 @@
 spring:
   application:
     name: sgr-core-api
-
+  datasource:
+    url: ${DB_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
