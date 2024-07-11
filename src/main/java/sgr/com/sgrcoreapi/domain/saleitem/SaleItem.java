@@ -26,6 +26,8 @@ public class SaleItem {
     @Enumerated(EnumType.STRING)
     private SaleItemPriceCurrencyEnum priceCurrency;
 
+    private Boolean isAvailable;
+
     @OneToMany(mappedBy = "saleItem")
     private List<StockItemAssociation> stockItemAssociations;
 }
