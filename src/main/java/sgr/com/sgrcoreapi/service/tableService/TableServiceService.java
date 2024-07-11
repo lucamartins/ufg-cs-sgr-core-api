@@ -22,6 +22,9 @@ import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
 import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 import sgr.com.sgrcoreapi.service.tableService.dto.AddTableServiceRequest;
+import sgr.com.sgrcoreapi.service.tableService.dto.CloseTableServiceRequest;
+import sgr.com.sgrcoreapi.service.tableService.dto.CloseTableServiceResponse;
+import sgr.com.sgrcoreapi.service.tableService.dto.ClosingTableServiceDetails;
 import sgr.com.sgrcoreapi.service.tableService.dto.TableServiceDetails;
 import sgr.com.sgrcoreapi.service.user.dto.TableServiceResponsibleUser;
 
@@ -76,5 +79,30 @@ public class TableServiceService {
         return new PageImpl<>(detailsList, pageable, tableServicesPage.getTotalElements());
     }
 
+    public TableServiceDetails getTableServiceDetails(UUID tableServiceId) {
+        var tableService = tableServiceRepository.findById(tableServiceId)
+                .orElseThrow(() -> new NotFoundException("Table service not found"));
+
+        var tableDetails = tableRepository.findById(tableService.getCustomerTable().getId())
+                .map(TableConversionUtil::toTableDetails)
+                .orElseThrow(() -> new NotFoundException("Table not found"));
+
+        var tableServiceResponsibleUser = userRepository.findById(tableService.getWaiter().getId())
+                .map(UserConversionUtil::toTableServiceResponsibleUser)
+                .orElseThrow(() -> new NotFoundException("Waiter not found"));
+
+        return TableServiceConversionUtil.toTableServiceDetails(tableService, tableDetails, tableServiceResponsibleUser);
+    }
+
+    public ClosingTableServiceDetails getClosingTableServiceDetails(UUID tableServiceId) {
+        // TODO Pegar todos os pedidos e calcular o valor devido
+        return null;
+    }
+
+    public CloseTableServiceResponse closeTableService(UUID tableServiceId, CloseTableServiceRequest closeTableServiceRequest) {
+        // TODO Validar se possui pedido em andamento
+        // TODO fechar a conta, atualizar o status do serviço e liberar a mesa
+        return null;
+    }
     // TODO Implement other methods
 }

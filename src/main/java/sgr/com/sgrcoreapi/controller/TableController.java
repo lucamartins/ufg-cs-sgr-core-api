@@ -18,7 +18,7 @@ import sgr.com.sgrcoreapi.converters.table.TableConversionUtil;
 import sgr.com.sgrcoreapi.infra.http.ApiResponse;
 import sgr.com.sgrcoreapi.infra.http.NoDataApiResponse;
 import sgr.com.sgrcoreapi.infra.http.PagedApiResponse;
-import sgr.com.sgrcoreapi.service.table.TableService;
+import sgr.com.sgrcoreapi.service.table.CustomerTableService;
 import sgr.com.sgrcoreapi.service.table.dto.AddTableRequest;
 import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 
@@ -26,11 +26,11 @@ import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 @RequiredArgsConstructor
 @RequestMapping("/tables")
 public class TableController {
-    private final TableService tableService;
+    private final CustomerTableService customerTableService;
 
     @PostMapping
     public ResponseEntity<NoDataApiResponse> createTable(@RequestBody @Valid AddTableRequest addTableRequest) {
-        tableService.createTable(addTableRequest);
+        customerTableService.createTable(addTableRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new NoDataApiResponse(201, "Mesa criada com sucesso"));
     }
 
@@ -39,7 +39,7 @@ public class TableController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "isAvailable", required = false) Boolean isAvailable) {
-        Page<TableDetails> tablesPage = tableService.getTables(page, pageSize, isAvailable);
+        Page<TableDetails> tablesPage = customerTableService.getTables(page, pageSize, isAvailable);
         var response = new PagedApiResponse<>(
                 HttpStatus.OK.value(),
                 tablesPage
@@ -49,7 +49,7 @@ public class TableController {
 
     @GetMapping("/{tableId}")
     public ResponseEntity<ApiResponse<TableDetails>> getTableDetails(@PathVariable UUID tableId) {
-        var table = tableService.findTableById(tableId);
+        var table = customerTableService.findTableById(tableId);
         var tableDetails = TableConversionUtil.toTableDetails(table);
 
         var response = new ApiResponse<>(HttpStatus.OK.value(), tableDetails);
@@ -58,7 +58,7 @@ public class TableController {
 
     @DeleteMapping("/{tableId}")
     public ResponseEntity<NoDataApiResponse> deleteTable(@PathVariable UUID tableId) {
-        tableService.deleteTable(tableId);
+        customerTableService.deleteTable(tableId);
         var response = new NoDataApiResponse(
                 HttpStatus.NO_CONTENT.value()
         );

@@ -16,7 +16,7 @@ import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 
 @Service
 @RequiredArgsConstructor
-public class TableService {
+public class CustomerTableService {
     private final TableRepository tableRepository;
 
     public void createTable(AddTableRequest addTableRequest) {
