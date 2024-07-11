@@ -113,12 +113,18 @@ public class OrderService {
         return new OrderDetails(newOrder);
     }
 
-    public Page<OrderDetails> getOrdersPage(int page, int pageSize) {
+    public Page<OrderDetails> getOrdersPage(int page, int pageSize, OrderStatusEnum orderStatus) {
         var pageableConfig = Pageable.ofSize(pageSize).withPage(page);
 
-        var ordersPage = orderRepository.findAll(pageableConfig);
+        if (orderStatus != null) {
+            return orderRepository
+                    .findAllByStatus(orderStatus, pageableConfig)
+                    .map(OrderDetails::new);
+        }
 
-        return ordersPage.map(OrderDetails::new);
+        return orderRepository
+                .findAll(pageableConfig)
+                .map(OrderDetails::new);
     }
 
     public OrderDetails getOrder(UUID orderId) {

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import sgr.com.sgrcoreapi.domain.order.OrderStatusEnum;
 import sgr.com.sgrcoreapi.infra.http.ApiResponse;
 import sgr.com.sgrcoreapi.infra.http.HttpHelper;
 import sgr.com.sgrcoreapi.infra.http.PagedApiResponse;
@@ -40,9 +41,10 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<PagedApiResponse<OrderDetails>> getOrdersPage(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int pageSize
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) OrderStatusEnum status
     ) {
-        var orderPage = service.getOrdersPage(page, pageSize);
+        var orderPage = service.getOrdersPage(page, pageSize, status);
 
         var response = new PagedApiResponse<>(
                 HttpStatus.OK.value(),
