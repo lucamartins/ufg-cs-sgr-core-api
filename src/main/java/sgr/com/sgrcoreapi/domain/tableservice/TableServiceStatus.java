@@ -1,4 +1,4 @@
-package sgr.com.sgrcoreapi.domain.tableService;
+package sgr.com.sgrcoreapi.domain.tableservice;
 
 public enum TableServiceStatus {
     IN_PROGRESS,

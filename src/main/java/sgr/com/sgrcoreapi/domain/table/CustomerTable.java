@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import sgr.com.sgrcoreapi.service.table.dto.AddTableRequest;
 
 @Entity
-@jakarta.persistence.Table(name = "tables")
+@Table(name = "tables")
 @Data
 @NoArgsConstructor
 public class CustomerTable {

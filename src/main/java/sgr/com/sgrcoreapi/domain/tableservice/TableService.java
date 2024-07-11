@@ -1,5 +1,6 @@
-package sgr.com.sgrcoreapi.domain.tableService;
+package sgr.com.sgrcoreapi.domain.tableservice;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,9 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sgr.com.sgrcoreapi.domain.table.CustomerTable;
 import sgr.com.sgrcoreapi.domain.user.User;
 
 @Entity
@@ -28,11 +31,16 @@ public class TableService {
 
     private Double paidAmount = (double) 0;
 
+    @Column(name = "started_at", nullable = false)
+    private LocalDateTime startedAt = LocalDateTime.now();
+
     @ManyToOne
     @JoinColumn(name = "table_id")
-    private sgr.com.sgrcoreapi.domain.table.Table table;
+    private CustomerTable customerTable;
 
     @ManyToOne
     @JoinColumn(name = "waiter_id")
     private User waiter;
+
+    // TODO adicionar o campo pedidos
 }
