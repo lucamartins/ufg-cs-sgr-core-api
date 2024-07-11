@@ -100,6 +100,7 @@ public class SaleItemService {
     }
 
     public void deleteSaleItem(UUID saleItemId) {
+        // TODO: validate if sale item can be deleted
         var saleItem = saleItemRepository
                 .findById(saleItemId)
                 .orElseThrow(NotFoundException::new);
