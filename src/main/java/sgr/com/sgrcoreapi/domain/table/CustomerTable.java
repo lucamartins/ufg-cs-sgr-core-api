@@ -10,7 +10,7 @@ import sgr.com.sgrcoreapi.service.table.dto.AddTableRequest;
 @jakarta.persistence.Table(name = "tables")
 @Data
 @NoArgsConstructor
-public class CostumerTable {
+public class CustomerTable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -19,7 +19,7 @@ public class CostumerTable {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
-    public CostumerTable(AddTableRequest addTableRequest) {
+    public CustomerTable(AddTableRequest addTableRequest) {
         this.isAvailable = addTableRequest.isAvailable();
     }
 
