@@ -27,7 +27,7 @@ public class SaleItemController {
     public ResponseEntity<ApiResponse<SaleItemDetails>> createSaleItem(@RequestBody @Valid AddSaleItemRequest addSaleItemRequest) {
         var saleItem = service.createSaleItem(addSaleItemRequest);
 
-        var resourceURI = HttpHelper.getCreatedResourceURI(saleItem.id());
+        var resourceURI = HttpHelper.buildResourceURI(saleItem.id());
 
         var response = new ApiResponse<>(
                 HttpStatus.CREATED.value(),

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class HttpHelper {
 
-    public static URI getCreatedResourceURI(UUID resourceId) {
+    public static URI buildResourceURI(UUID resourceId) {
         return ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path(("/{id}"))

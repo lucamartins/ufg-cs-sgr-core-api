@@ -33,4 +33,11 @@ public class Order {
 
     @ManyToOne
     private User waiter;
+
+    public Order(TableService tableService, OrderStatusEnum status, User waiter, List<SaleItem> saleItems) {
+        this.tableService = tableService;
+        this.status = status;
+        this.waiter = waiter;
+        this.saleItems = saleItems;
+    }
 }

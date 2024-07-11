@@ -28,7 +28,7 @@ public class StockItemController {
     public ResponseEntity<ApiResponse<StockItemDetails>> createStockItem(@RequestBody @Valid AddStockItemRequest addStockItemRequest) {
         var createdStockItem = service.createStockItem(addStockItemRequest);
 
-        var resourceURI = HttpHelper.getCreatedResourceURI(createdStockItem.id());
+        var resourceURI = HttpHelper.buildResourceURI(createdStockItem.id());
 
         var response = new ApiResponse<>(
                 HttpStatus.CREATED.value(),
