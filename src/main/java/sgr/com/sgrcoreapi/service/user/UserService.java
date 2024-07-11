@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.domain.user.User;
 import sgr.com.sgrcoreapi.domain.user.UserRepository;
 import sgr.com.sgrcoreapi.domain.user.UserRoleEnum;
+import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.user.dto.AddUserRequest;
 import sgr.com.sgrcoreapi.service.user.dto.UserUpdateRequest;
 
@@ -40,13 +41,13 @@ public class UserService {
     }
 
     public User getUserDetails(UUID userId) {
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
     }
 
     public void updateUser(UUID userId, UserUpdateRequest userUpdateRequest) {
         User user = userRepository
                 .findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
 
         user.updateUserInfo(userUpdateRequest);
         userRepository.save(user);
@@ -57,7 +58,7 @@ public class UserService {
         // TODO: Verify if Waiter have table service in progress
         User user = userRepository
                 .findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
 
         user.setDeleted(true);
         userRepository.save(user);

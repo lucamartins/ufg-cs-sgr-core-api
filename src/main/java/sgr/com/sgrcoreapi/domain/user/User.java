@@ -8,6 +8,7 @@ import sgr.com.sgrcoreapi.service.user.dto.AddUserRequest;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import sgr.com.sgrcoreapi.service.user.dto.UserUpdateRequest;
 
 @Entity
 @Table(name = "users")
@@ -37,6 +38,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
     public User(AddUserRequest addUserRequest) {
         this.name = addUserRequest.name();
         this.cpf = addUserRequest.cpf();
@@ -46,4 +50,10 @@ public class User {
         this.password = addUserRequest.password();
         this.role = addUserRequest.role();
     }
+
+    public void updateUserInfo(UserUpdateRequest userUpdateRequest) {
+        this.name = userUpdateRequest.name();
+        this.email = userUpdateRequest.email();
+        this.phone = userUpdateRequest.phone();
+        this.birthDate = userUpdateRequest.birthDate();}
 }
