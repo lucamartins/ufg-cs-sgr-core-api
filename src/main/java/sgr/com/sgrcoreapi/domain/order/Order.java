@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sgr.com.sgrcoreapi.domain.saleitem.SaleItem;
-import sgr.com.sgrcoreapi.domain.tableService.TableService;
+import sgr.com.sgrcoreapi.domain.tableservice.TableService;
 import sgr.com.sgrcoreapi.domain.user.User;
 
 import java.util.List;
