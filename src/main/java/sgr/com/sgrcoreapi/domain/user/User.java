@@ -1,9 +1,11 @@
 package sgr.com.sgrcoreapi.domain.user;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sgr.com.sgrcoreapi.domain.tableService.TableService;
 import sgr.com.sgrcoreapi.service.user.dto.AddUserRequest;
 
 import java.time.LocalDate;
@@ -40,6 +42,9 @@ public class User {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
+
+    @OneToMany(mappedBy = "waiter", fetch = FetchType.LAZY)
+    private List<TableService> tableServices;
 
     public User(AddUserRequest addUserRequest) {
         this.name = addUserRequest.name();
