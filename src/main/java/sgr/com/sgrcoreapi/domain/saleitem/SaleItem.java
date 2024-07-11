@@ -39,4 +39,22 @@ public class SaleItem {
         this.isAvailable = addSaleItemRequest.isSaleAvailable();
         this.saleItemStockItems = null;
     }
+
+    public boolean getIsSaleAvailable() {
+        if (!this.isAvailable) {
+            return false;
+        }
+
+        return this.saleItemStockItems.stream().allMatch(saleItemStockItem -> {
+            var stockItem = saleItemStockItem.getStockItem();
+            var fractionalQuantity = saleItemStockItem.getFractionalQuantity();
+            var wholeQuantity = saleItemStockItem.getWholeQuantity();
+
+            if (stockItem.getAllowFractionalQuantity()) {
+                return stockItem.getFractionalQuantity() >= fractionalQuantity;
+            }
+
+            return stockItem.getWholeQuantity() >= wholeQuantity;
+        });
+    }
 }

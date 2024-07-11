@@ -14,6 +14,7 @@ import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequest;
 import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequestStockItem;
 import sgr.com.sgrcoreapi.service.saleitem.dto.SaleItemDetails;
+import sgr.com.sgrcoreapi.service.saleitem.dto.UpdateSaleItemRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +81,29 @@ public class SaleItemService {
         return saleItemsPage.map(SaleItemDetails::new);
     }
 
-    public void updateSaleItem(UUID saleItemId) {
+    public SaleItemDetails updateSaleItem(UUID saleItemId, UpdateSaleItemRequest updateSaleItemRequest) {
+        var saleItem = saleItemRepository
+                .findById(saleItemId)
+                .orElseThrow(NotFoundException::new);
 
+        if (updateSaleItemRequest.name() != null) {
+            saleItem.setName(updateSaleItemRequest.name());
+        }
+
+        if (updateSaleItemRequest.isAvailable() != null) {
+            saleItem.setIsAvailable(updateSaleItemRequest.isAvailable());
+        }
+
+        saleItemRepository.save(saleItem);
+
+        return new SaleItemDetails(saleItem);
     }
 
     public void deleteSaleItem(UUID saleItemId) {
+        var saleItem = saleItemRepository
+                .findById(saleItemId)
+                .orElseThrow(NotFoundException::new);
 
+        saleItemRepository.delete(saleItem);
     }
 }
