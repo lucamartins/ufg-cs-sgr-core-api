@@ -2,6 +2,7 @@ package sgr.com.sgrcoreapi.converters.user;
 
 import lombok.experimental.UtilityClass;
 import sgr.com.sgrcoreapi.domain.user.User;
+import sgr.com.sgrcoreapi.service.user.dto.TableServiceResponsibleUser;
 import sgr.com.sgrcoreapi.service.user.dto.UserDetails;
 import sgr.com.sgrcoreapi.service.user.dto.UserOverview;
 
@@ -28,6 +29,13 @@ public class UserConversionUtil {
                 user.getBirthDate(),
                 user.getRole(),
                 user.isDeleted()
+        );
+    }
+
+    public static TableServiceResponsibleUser toTableServiceResponsibleUser(User user) {
+        return new TableServiceResponsibleUser(
+                user.getId(),
+                user.getName()
         );
     }
 }
