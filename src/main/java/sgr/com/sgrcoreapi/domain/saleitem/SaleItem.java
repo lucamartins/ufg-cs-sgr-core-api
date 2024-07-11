@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,14 @@ public class SaleItem {
 
     private Boolean isAvailable;
 
-    @OneToMany(mappedBy = "saleItem")
-    private List<StockItemAssociation> stockItemAssociations;
+    @OneToMany(mappedBy = "saleItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SaleItemStockItem> saleItemStockItems;
+
+    public SaleItem(AddSaleItemRequest addSaleItemRequest) {
+        this.name = addSaleItemRequest.name();
+        this.price = addSaleItemRequest.price();
+        this.priceCurrency = addSaleItemRequest.priceCurrency();
+        this.isAvailable = addSaleItemRequest.isSaleAvailable();
+        this.saleItemStockItems = null;
+    }
 }

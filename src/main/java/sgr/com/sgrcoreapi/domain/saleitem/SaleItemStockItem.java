@@ -9,11 +9,11 @@ import sgr.com.sgrcoreapi.domain.stockitem.StockItem;
 import java.util.UUID;
 
 @Entity
-@Table(name = "stock_item_associations")
+@Table(name = "sale_item_stock_item")
 @NoArgsConstructor
 @Getter
 @Setter
-public class StockItemAssociation {
+public class SaleItemStockItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -27,4 +27,11 @@ public class StockItemAssociation {
     private Double fractionalQuantity;
 
     private Long wholeQuantity;
+
+    public SaleItemStockItem(SaleItem saleItem, StockItem stockItem, Double fractionalQuantity, Long wholeQuantity) {
+        this.saleItem = saleItem;
+        this.stockItem = stockItem;
+        this.fractionalQuantity = fractionalQuantity;
+        this.wholeQuantity = wholeQuantity;
+    }
 }

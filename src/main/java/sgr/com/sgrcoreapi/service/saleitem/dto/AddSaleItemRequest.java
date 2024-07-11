@@ -2,7 +2,7 @@ package sgr.com.sgrcoreapi.service.saleitem.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Size;
 import sgr.com.sgrcoreapi.domain.saleitem.SaleItemPriceCurrencyEnum;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public record AddSaleItemRequest(
         @NotNull
         Boolean isSaleAvailable,
         @NotNull
-        @Length(min = 1)
+        @Size(min = 1)
         List<AddSaleItemRequestStockItem> stockItems
 ) {
 }
