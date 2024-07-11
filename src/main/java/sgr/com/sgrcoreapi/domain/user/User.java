@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sgr.com.sgrcoreapi.domain.tableService.TableService;
+import sgr.com.sgrcoreapi.domain.tableservice.TableService;
 import sgr.com.sgrcoreapi.service.user.dto.AddUserRequest;
 
 import java.time.LocalDate;
