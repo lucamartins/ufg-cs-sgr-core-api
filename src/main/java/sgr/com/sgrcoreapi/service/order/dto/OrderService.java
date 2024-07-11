@@ -1,6 +1,8 @@
 package sgr.com.sgrcoreapi.service.order.dto;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.domain.order.Order;
 import sgr.com.sgrcoreapi.domain.order.OrderRepository;
@@ -10,10 +12,12 @@ import sgr.com.sgrcoreapi.domain.tableservice.TableServiceRepository;
 import sgr.com.sgrcoreapi.domain.tableservice.TableServiceStatus;
 import sgr.com.sgrcoreapi.domain.user.UserRepository;
 import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
+import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementTypeEnum;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -107,5 +111,21 @@ public class OrderService {
         orderRepository.save(newOrder);
 
         return new OrderDetails(newOrder);
+    }
+
+    public Page<OrderDetails> getOrdersPage(int page, int pageSize) {
+        var pageableConfig = Pageable.ofSize(pageSize).withPage(page);
+
+        var ordersPage = orderRepository.findAll(pageableConfig);
+
+        return ordersPage.map(OrderDetails::new);
+    }
+
+    public OrderDetails getOrder(UUID orderId) {
+        var order = orderRepository
+                .findById(orderId)
+                .orElseThrow(NotFoundException::new);
+
+        return new OrderDetails(order);
     }
 }
