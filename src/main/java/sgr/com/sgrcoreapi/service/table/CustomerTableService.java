@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.converters.table.TableConversionUtil;
 import sgr.com.sgrcoreapi.domain.table.CustomerTable;
-import sgr.com.sgrcoreapi.domain.table.TableRepository;
+import sgr.com.sgrcoreapi.domain.table.CustomerTableRepository;
 import sgr.com.sgrcoreapi.infra.exception.custom.InternalErrorException;
 import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.table.dto.AddTableRequest;
@@ -17,19 +17,19 @@ import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 @Service
 @RequiredArgsConstructor
 public class CustomerTableService {
-    private final TableRepository tableRepository;
+    private final CustomerTableRepository customerTableRepository;
 
     public void createTable(AddTableRequest addTableRequest) {
         CustomerTable customerTable = new CustomerTable(addTableRequest);
-        tableRepository.save(customerTable);
+        customerTableRepository.save(customerTable);
     }
 
     public CustomerTable findTableById(UUID tableId) {
-        return tableRepository.findById(tableId).orElseThrow(() -> new NotFoundException("Mesa não encontrada"));
+        return customerTableRepository.findById(tableId).orElseThrow(() -> new NotFoundException("Mesa não encontrada"));
     }
 
     public void deleteTable(UUID tableId) {
-        CustomerTable customerTable = tableRepository.findByIdAndIsDeletedFalse(tableId)
+        CustomerTable customerTable = customerTableRepository.findByIdAndIsDeletedFalse(tableId)
                 .orElseThrow(() -> new NotFoundException("Mesa não encontrada"));
 
         if(!customerTable.isAvailable()) {
@@ -37,15 +37,15 @@ public class CustomerTableService {
         }
         // TODO validar se atendimento está aberto
         customerTable.setDeleted(true);
-        tableRepository.save(customerTable);
+        customerTableRepository.save(customerTable);
     }
 
     public Page<TableDetails> getTables(int page, int pageSize, Boolean isAvailable) {
         Pageable pageable = PageRequest.of(page, pageSize);
 
         var tablesPage = isAvailable != null
-                ? tableRepository.findByIsAvailableAndIsDeletedFalse(isAvailable, pageable)
-                : tableRepository.findByIsDeletedFalse(pageable);
+                ? customerTableRepository.findByIsAvailableAndIsDeletedFalse(isAvailable, pageable)
+                : customerTableRepository.findByIsDeletedFalse(pageable);
 
         return tablesPage.map(TableConversionUtil::toTableDetails);
     }

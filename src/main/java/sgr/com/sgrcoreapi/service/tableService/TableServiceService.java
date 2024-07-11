@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.converters.table.TableConversionUtil;
 import sgr.com.sgrcoreapi.converters.tableservice.TableServiceConversionUtil;
 import sgr.com.sgrcoreapi.converters.user.UserConversionUtil;
-import sgr.com.sgrcoreapi.domain.table.TableRepository;
+import sgr.com.sgrcoreapi.domain.table.CustomerTableRepository;
 import sgr.com.sgrcoreapi.domain.tableservice.TableService;
 import sgr.com.sgrcoreapi.domain.tableservice.TableServiceRepository;
 import sgr.com.sgrcoreapi.domain.tableservice.TableServiceStatus;
@@ -32,13 +32,13 @@ import sgr.com.sgrcoreapi.service.user.dto.TableServiceResponsibleUser;
 @RequiredArgsConstructor
 public class TableServiceService {
     private final TableServiceRepository tableServiceRepository;
-    private final TableRepository tableRepository;
+    private final CustomerTableRepository customerTableRepository;
     private final UserRepository userRepository;
 
     public void createTableService(AddTableServiceRequest addTableServiceRequest) {
         TableService tableService = new TableService();
 
-        var table = tableRepository.findById(addTableServiceRequest.tableId())
+        var table = customerTableRepository.findById(addTableServiceRequest.tableId())
                 .orElseThrow(() -> new NotFoundException("Table not found"));
         var waiter = userRepository.findById(addTableServiceRequest.waiterId())
                 .orElseThrow(() -> new NotFoundException("Waiter not found"));
@@ -64,7 +64,7 @@ public class TableServiceService {
         List<TableServiceDetails> detailsList = tableServicesPage.getContent().stream()
                 .map(tableService -> {
 
-                    TableDetails tableDetails = tableRepository.findById(tableService.getCustomerTable().getId())
+                    TableDetails tableDetails = customerTableRepository.findById(tableService.getCustomerTable().getId())
                             .map(TableConversionUtil::toTableDetails)
                             .orElseThrow(() -> new NotFoundException("Table not found"));
 
@@ -83,7 +83,7 @@ public class TableServiceService {
         var tableService = tableServiceRepository.findById(tableServiceId)
                 .orElseThrow(() -> new NotFoundException("Table service not found"));
 
-        var tableDetails = tableRepository.findById(tableService.getCustomerTable().getId())
+        var tableDetails = customerTableRepository.findById(tableService.getCustomerTable().getId())
                 .map(TableConversionUtil::toTableDetails)
                 .orElseThrow(() -> new NotFoundException("Table not found"));
 

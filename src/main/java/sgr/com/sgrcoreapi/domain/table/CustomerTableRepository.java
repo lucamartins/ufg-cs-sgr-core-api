@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface TableRepository extends JpaRepository<CustomerTable, UUID> {
+public interface CustomerTableRepository extends JpaRepository<CustomerTable, UUID> {
     Page<CustomerTable> findByIsAvailable(boolean isAvailable, Pageable pageable);
     Page<CustomerTable> findByIsDeletedFalse(Pageable pageable);
     Optional<CustomerTable> findByIdAndIsDeletedFalse(UUID id);
