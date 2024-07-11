@@ -1,6 +1,8 @@
 package sgr.com.sgrcoreapi.service.saleitem;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.domain.saleitem.SaleItem;
 import sgr.com.sgrcoreapi.domain.saleitem.SaleItemRepository;
@@ -8,9 +10,11 @@ import sgr.com.sgrcoreapi.domain.saleitem.SaleItemStockItem;
 import sgr.com.sgrcoreapi.domain.stockitem.StockItem;
 import sgr.com.sgrcoreapi.domain.stockitem.StockItemRepository;
 import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
+import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequest;
 import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequestStockItem;
 import sgr.com.sgrcoreapi.service.saleitem.dto.SaleItemDetails;
+import sgr.com.sgrcoreapi.service.saleitem.dto.UpdateSaleItemRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,20 +65,46 @@ public class SaleItemService {
         return new SaleItemDetails(saleItem);
     }
 
+    public SaleItemDetails getSaleItem(UUID saleItemId) {
+        var saleItem = saleItemRepository
+                .findById(saleItemId)
+                .orElseThrow(NotFoundException::new);
 
-    public void getSaleItem(UUID saleItemId) {
-
+        return new SaleItemDetails(saleItem);
     }
 
-    public void getSaleItemsPage(int page, int pageSize, boolean isAvailable) {
+    public Page<SaleItemDetails> getSaleItemsPage(int page, int pageSize, boolean isAvailable) {
+        Pageable pageable = Pageable.ofSize(pageSize).withPage(page);
 
+        Page<SaleItem> saleItemsPage = saleItemRepository.findAvailableSaleItems(isAvailable, pageable);
+
+        return saleItemsPage.map(SaleItemDetails::new);
     }
 
-    public void updateSaleItem(UUID saleItemId) {
+    public SaleItemDetails updateSaleItem(UUID saleItemId, UpdateSaleItemRequest updateSaleItemRequest) {
+        var saleItem = saleItemRepository
+                .findById(saleItemId)
+                .orElseThrow(NotFoundException::new);
 
+        if (updateSaleItemRequest.name() != null) {
+            saleItem.setName(updateSaleItemRequest.name());
+        }
+
+        if (updateSaleItemRequest.isAvailable() != null) {
+            saleItem.setIsAvailable(updateSaleItemRequest.isAvailable());
+        }
+
+        saleItemRepository.save(saleItem);
+
+        return new SaleItemDetails(saleItem);
     }
 
     public void deleteSaleItem(UUID saleItemId) {
+        // TODO: validate if sale item can be deleted
+        var saleItem = saleItemRepository
+                .findById(saleItemId)
+                .orElseThrow(NotFoundException::new);
 
+        saleItemRepository.delete(saleItem);
     }
 }

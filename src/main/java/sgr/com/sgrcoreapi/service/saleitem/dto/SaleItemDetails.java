@@ -20,7 +20,7 @@ public record SaleItemDetails(
                 saleItem.getName(),
                 saleItem.getPrice(),
                 saleItem.getPriceCurrency(),
-                saleItem.getIsAvailable(),
+                saleItem.getIsSaleAvailable(),
                 saleItem.getSaleItemStockItems().stream()
                         .map(StockItemAssociationDetails::new)
                         .toList()
