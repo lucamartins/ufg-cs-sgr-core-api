@@ -1,4 +1,4 @@
-package sgr.com.sgrcoreapi.service.stockitem.saleitem.dto;
+package sgr.com.sgrcoreapi.service.saleitem.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
