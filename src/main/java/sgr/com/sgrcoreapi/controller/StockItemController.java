@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import sgr.com.sgrcoreapi.infra.http.ApiResponse;
 import sgr.com.sgrcoreapi.infra.http.HttpHelper;
@@ -24,6 +25,7 @@ public class StockItemController {
 
     private final StockItemService service;
 
+    @Transactional
     @PostMapping
     public ResponseEntity<ApiResponse<StockItemDetails>> createStockItem(@RequestBody @Valid AddStockItemRequest addStockItemRequest) {
         var createdStockItem = service.createStockItem(addStockItemRequest);
@@ -66,6 +68,7 @@ public class StockItemController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<StockItemDetails>> updateStockItem(@PathVariable UUID id,
                                                              @RequestBody @Valid UpdateStockItemRequest updateStockItemRequest) {
@@ -76,6 +79,7 @@ public class StockItemController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<NoDataApiResponse> deleteStockItem(@PathVariable UUID id) {
         service.deleteStockItem(id);
@@ -85,6 +89,7 @@ public class StockItemController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PostMapping("/{id}/movement")
     public ResponseEntity<ApiResponse<StockItemDetails>> createStockMovement(@PathVariable UUID id,
                                   @RequestBody @Valid StockMovementRequest stockMovementRequest) {

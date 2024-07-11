@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 public class TableController {
     private final CustomerTableService customerTableService;
 
+    @Transactional
     @PostMapping
     public ResponseEntity<NoDataApiResponse> createTable(@RequestBody @Valid AddTableRequest addTableRequest) {
         customerTableService.createTable(addTableRequest);
@@ -56,6 +58,7 @@ public class TableController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @DeleteMapping("/{tableId}")
     public ResponseEntity<NoDataApiResponse> deleteTable(@PathVariable UUID tableId) {
         customerTableService.deleteTable(tableId);

@@ -10,6 +10,8 @@ import sgr.com.sgrcoreapi.domain.tableservice.TableServiceRepository;
 import sgr.com.sgrcoreapi.domain.tableservice.TableServiceStatus;
 import sgr.com.sgrcoreapi.domain.user.UserRepository;
 import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
+import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementRequest;
+import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementTypeEnum;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,32 @@ public class OrderService {
     private final TableServiceRepository tableServiceRepository;
     private final UserRepository userRepository;
     private final SaleItemRepository saleItemRepository;
+
+    private void updateStockBasedOnOrder(Order order) {
+        var saleItems = order.getSaleItems();
+
+        saleItems.forEach(saleItem -> {
+            var saleItemStockItems = saleItem.getSaleItemStockItems();
+
+            saleItemStockItems.forEach(saleItemStockItem -> {
+                var wholeQuantity = saleItemStockItem.getWholeQuantity();
+                var fractionQuantity = saleItemStockItem.getFractionalQuantity();
+
+                var stockItem = saleItemStockItem.getStockItem();
+                var isFractionalQuantity = stockItem.getAllowFractionalQuantity();
+
+                var stockItemMovement = new StockMovementRequest(
+                        StockMovementTypeEnum.OUT,
+                        isFractionalQuantity ? fractionQuantity : null,
+                        isFractionalQuantity ? null : wholeQuantity
+                );
+
+                stockItem.processMovement(stockItemMovement);
+            });
+        });
+
+        orderRepository.save(order);
+    }
 
     public OrderDetails addOrder(AddOrderRequest addOrderRequest) {
         // GET TABLE SERVICE AND VALIDATE IT
@@ -75,6 +103,7 @@ public class OrderService {
                 saleItems
         );
 
+        updateStockBasedOnOrder(newOrder);
         orderRepository.save(newOrder);
 
         return new OrderDetails(newOrder);

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import sgr.com.sgrcoreapi.infra.http.ApiResponse;
 import sgr.com.sgrcoreapi.infra.http.HttpHelper;
@@ -23,6 +24,7 @@ public class SaleItemController {
 
     private final SaleItemService service;
 
+    @Transactional
     @PostMapping
     public ResponseEntity<ApiResponse<SaleItemDetails>> createSaleItem(@RequestBody @Valid AddSaleItemRequest addSaleItemRequest) {
         var saleItem = service.createSaleItem(addSaleItemRequest);
@@ -65,6 +67,7 @@ public class SaleItemController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<SaleItemDetails>> updateSaleItem(@PathVariable UUID id,
                                 @RequestBody @Valid UpdateSaleItemRequest updateSaleItemRequest) {
@@ -78,6 +81,7 @@ public class SaleItemController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<NoDataApiResponse> deleteSaleItem(@PathVariable UUID id) {
         // TODO: validate if there were never any order with this sale item

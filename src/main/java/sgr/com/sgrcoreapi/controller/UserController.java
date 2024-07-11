@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import sgr.com.sgrcoreapi.converters.user.UserConversionUtil;
 import sgr.com.sgrcoreapi.infra.http.ApiResponse;
@@ -27,6 +28,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Transactional
     @PostMapping
     public ResponseEntity<NoDataApiResponse> createUser(@RequestBody @Valid AddUserRequest addUserRequest) {
         userService.createUser(addUserRequest);
@@ -64,6 +66,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PutMapping("/{userId}")
     public ResponseEntity<NoDataApiResponse> updateUser(@PathVariable UUID userId, @RequestBody @Valid UserUpdateRequest userUpdateRequest) {
         userService.updateUser(userId, userUpdateRequest);
@@ -71,6 +74,7 @@ public class UserController {
         return ResponseEntity.ok(new NoDataApiResponse(HttpStatus.OK.value(), "Usuario atualizado com sucesso"));
     }
 
+    @Transactional
     @DeleteMapping("/{userId}")
     public ResponseEntity<NoDataApiResponse> deleteUser(@PathVariable UUID userId) {
         userService.deleteUser(userId);
