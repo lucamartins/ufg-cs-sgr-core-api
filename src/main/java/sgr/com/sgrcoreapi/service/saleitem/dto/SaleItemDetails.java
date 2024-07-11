@@ -1,5 +1,6 @@
 package sgr.com.sgrcoreapi.service.saleitem.dto;
 
+import sgr.com.sgrcoreapi.domain.saleitem.SaleItem;
 import sgr.com.sgrcoreapi.domain.saleitem.SaleItemPriceCurrencyEnum;
 
 import java.util.List;
@@ -13,4 +14,16 @@ public record SaleItemDetails(
         Boolean isSaleAvailable,
         List<StockItemAssociationDetails> stockItems
 ) {
+    public SaleItemDetails(SaleItem saleItem) {
+        this(
+                saleItem.getId(),
+                saleItem.getName(),
+                saleItem.getPrice(),
+                saleItem.getPriceCurrency(),
+                saleItem.getIsAvailable(),
+                saleItem.getSaleItemStockItems().stream()
+                        .map(StockItemAssociationDetails::new)
+                        .toList()
+        );
+    }
 }

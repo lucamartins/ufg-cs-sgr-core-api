@@ -10,6 +10,7 @@ import sgr.com.sgrcoreapi.domain.stockitem.StockItemRepository;
 import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
 import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequest;
 import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequestStockItem;
+import sgr.com.sgrcoreapi.service.saleitem.dto.SaleItemDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class SaleItemService {
         return isFractionalQuantityRequired;
     }
 
-    public UUID createSaleItem(AddSaleItemRequest addSaleItemRequest) {
+    public SaleItemDetails createSaleItem(AddSaleItemRequest addSaleItemRequest) {
         SaleItem newSaleItem = new SaleItem(addSaleItemRequest);
         List<SaleItemStockItem> saleItemStockItems = new ArrayList<>();
 
@@ -57,7 +58,7 @@ public class SaleItemService {
 
         newSaleItem.setSaleItemStockItems(saleItemStockItems);
         var saleItem = saleItemRepository.save(newSaleItem);
-        return saleItem.getId();
+        return new SaleItemDetails(saleItem);
     }
 
 
