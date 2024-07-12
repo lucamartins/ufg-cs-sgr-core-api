@@ -76,14 +76,14 @@ public class TableServiceController {
 
     @Transactional
     @PostMapping("/{table_service_id}/close")
-    public ResponseEntity<ApiResponse<CloseTableServiceResponse>> closeTableService(
+    public ResponseEntity<NoDataApiResponse> closeTableService(
             @PathVariable(name = "table_service_id") UUID tableServiceId,
             @RequestBody CloseTableServiceRequest closeTableServiceRequest) {
 
-        var closeTableServiceResponse = tableServService.closeTableService(tableServiceId, closeTableServiceRequest);
-        var response = new ApiResponse<CloseTableServiceResponse>(
+        tableServService.closeTableService(tableServiceId, closeTableServiceRequest);
+        var response = new NoDataApiResponse(
                 200,
-                closeTableServiceResponse
+                "Atendimento finalizado"
         );
         return ResponseEntity.ok(response);
     }

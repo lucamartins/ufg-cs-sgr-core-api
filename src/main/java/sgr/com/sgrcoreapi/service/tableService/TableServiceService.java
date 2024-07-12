@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.converters.table.TableConversionUtil;
 import sgr.com.sgrcoreapi.converters.tableservice.TableServiceConversionUtil;
 import sgr.com.sgrcoreapi.converters.user.UserConversionUtil;
-import sgr.com.sgrcoreapi.domain.order.OrderRepository;
 import sgr.com.sgrcoreapi.domain.order.OrderStatusEnum;
 import sgr.com.sgrcoreapi.domain.saleitem.SaleItem;
 import sgr.com.sgrcoreapi.domain.table.CustomerTableRepository;
@@ -28,7 +27,6 @@ import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 import sgr.com.sgrcoreapi.service.tableService.dto.AddTableServiceRequest;
 import sgr.com.sgrcoreapi.service.tableService.dto.CloseTableServiceRequest;
-import sgr.com.sgrcoreapi.service.tableService.dto.CloseTableServiceResponse;
 import sgr.com.sgrcoreapi.service.tableService.dto.ClosingTableServiceDetails;
 import sgr.com.sgrcoreapi.service.tableService.dto.TableServiceDetails;
 import sgr.com.sgrcoreapi.service.user.dto.TableServiceResponsibleUser;
@@ -112,7 +110,7 @@ public class TableServiceService {
         return toClosingTableServiceDetails(tableService, dueAmount);
     }
 
-    public CloseTableServiceResponse closeTableService(UUID tableServiceId, CloseTableServiceRequest closeTableServiceRequest) {
+    public void closeTableService(UUID tableServiceId, CloseTableServiceRequest closeTableServiceRequest) {
         var tableService = tableServiceRepository.findById(tableServiceId)
                 .orElseThrow(() -> new NotFoundException("Table service not found"));
 
@@ -131,6 +129,5 @@ public class TableServiceService {
         tableService.setPaidAmount(closeTableServiceRequest.paidAmount());
         tableService.setStatus(TableServiceStatus.FINISHED);
         tableService.getCustomerTable().changeAvailability();
-        return null;
     }
 }
