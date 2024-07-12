@@ -30,7 +30,6 @@ public class UserService {
 
     public Page<User> getActiveUsers(int page, int pageSize, UserRoleEnum userRole) {
         Pageable paging = PageRequest.of(page, pageSize);
-        // TODO quando oculta a ROLE está trazendo so waiter
         if (userRole == null) {
             return userRepository.findByIsDeletedFalse(paging);
         } else {
