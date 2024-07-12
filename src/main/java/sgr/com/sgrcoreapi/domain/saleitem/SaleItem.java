@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sgr.com.sgrcoreapi.domain.order.Order;
 import sgr.com.sgrcoreapi.service.saleitem.dto.AddSaleItemRequest;
 
 import java.util.List;
@@ -32,6 +33,9 @@ public class SaleItem {
     @OneToMany(mappedBy = "saleItem", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SaleItemStockItem> saleItemStockItems;
 
+    @ManyToMany(mappedBy = "saleItems")
+    private List<Order> orders;
+
     public SaleItem(AddSaleItemRequest addSaleItemRequest) {
         this.name = addSaleItemRequest.name();
         this.price = addSaleItemRequest.price();
@@ -56,5 +60,9 @@ public class SaleItem {
 
             return stockItem.getWholeQuantity() >= wholeQuantity;
         });
+    }
+
+    public boolean canBeDeleted() {
+        return this.orders.isEmpty();
     }
 }

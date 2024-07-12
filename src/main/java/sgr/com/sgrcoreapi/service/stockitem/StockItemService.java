@@ -30,7 +30,14 @@ public class StockItemService {
     }
 
     public void deleteStockItem(UUID stockItemId) {
-        // TODO: validate if stock item can be deleted
+        var stockItem = stockItemRepository
+                .findById(stockItemId)
+                .orElseThrow(NotFoundException::new);
+
+        if (!stockItem.canBeDeleted()) {
+            throw new BadRequestException("Stock item cannot be deleted");
+        }
+
         stockItemRepository.deleteById(stockItemId);
     }
 

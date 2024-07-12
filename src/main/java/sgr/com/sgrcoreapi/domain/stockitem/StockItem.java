@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sgr.com.sgrcoreapi.domain.saleitem.SaleItemStockItem;
 import sgr.com.sgrcoreapi.service.stockitem.dto.AddStockItemRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementTypeEnum;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +33,9 @@ public class StockItem {
     private Double fractionalQuantity;
 
     private Long wholeQuantity;
+
+    @OneToMany(mappedBy = "stockItem")
+    private List<SaleItemStockItem> saleItemStockItems;
 
     public StockItem(AddStockItemRequest addStockItemRequest) {
         var isFractional = addStockItemRequest.allowFractionalQuantity();
@@ -82,5 +87,9 @@ public class StockItem {
         }
 
         wholeQuantity -= stockMovementRequest.wholeQuantity();
+    }
+
+    public boolean canBeDeleted() {
+        return saleItemStockItems.isEmpty();
     }
 }

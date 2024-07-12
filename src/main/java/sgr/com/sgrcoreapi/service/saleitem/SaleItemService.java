@@ -100,11 +100,15 @@ public class SaleItemService {
     }
 
     public void deleteSaleItem(UUID saleItemId) {
-        // TODO: validate if sale item can be deleted
         var saleItem = saleItemRepository
                 .findById(saleItemId)
                 .orElseThrow(NotFoundException::new);
 
+        if (!saleItem.canBeDeleted()) {
+            throw new BadRequestException("Sale item cannot be deleted. There are orders associated with it.");
+        }
+
+        System.out.println();
         saleItemRepository.delete(saleItem);
     }
 }

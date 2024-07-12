@@ -29,6 +29,11 @@ public class Order {
     private OrderStatusEnum status;
 
     @ManyToMany
+    @JoinTable(
+            name = "order_sale_items",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "sale_item_id")
+    )
     private List<SaleItem> saleItems;
 
     @ManyToOne

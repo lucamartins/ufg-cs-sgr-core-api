@@ -43,9 +43,9 @@ public class TableServiceService {
         TableService tableService = new TableService();
 
         var table = customerTableRepository.findById(addTableServiceRequest.tableId())
-                .orElseThrow(() -> new NotFoundException("Table not found"));
+                .orElseThrow(() -> new BadRequestException("Table not found"));
         var waiter = userRepository.findById(addTableServiceRequest.waiterId())
-                .orElseThrow(() -> new NotFoundException("Waiter not found"));
+                .orElseThrow(() -> new BadRequestException("Waiter not found"));
 
         if(!waiter.getRole().equals(UserRoleEnum.WAITER)) {
             throw new BadRequestException("User is not a waiter");

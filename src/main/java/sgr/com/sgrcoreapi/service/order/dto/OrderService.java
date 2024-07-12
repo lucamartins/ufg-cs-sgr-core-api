@@ -87,7 +87,6 @@ public class OrderService {
 
             if (matchingSaleItem.isEmpty()) {
                 saleItemsValidationErrors.add("Sale item not found: " + saleItemId);
-
             }
 
             if (matchingSaleItem.isPresent() && !matchingSaleItem.get().getIsSaleAvailable()) {

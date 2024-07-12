@@ -84,7 +84,6 @@ public class SaleItemController {
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<NoDataApiResponse> deleteSaleItem(@PathVariable UUID id) {
-        // TODO: validate if there were never any order with this sale item
         service.deleteSaleItem(id);
 
         var response = new NoDataApiResponse(
