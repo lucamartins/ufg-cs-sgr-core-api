@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.converters.table.TableConversionUtil;
 import sgr.com.sgrcoreapi.domain.table.CustomerTable;
 import sgr.com.sgrcoreapi.domain.table.CustomerTableRepository;
-import sgr.com.sgrcoreapi.infra.exception.custom.InternalErrorException;
+import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
 import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.table.dto.AddTableRequest;
 import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
@@ -33,7 +33,7 @@ public class CustomerTableService {
                 .orElseThrow(() -> new NotFoundException("Mesa não encontrada"));
 
         if(!customerTable.isAvailable()) {
-            throw new InternalErrorException("Mesa não pode ser deletada pois está em uso");
+            throw new BadRequestException("Mesa não pode ser deletada pois está em uso");
         }
 
         customerTable.setDeleted(true);

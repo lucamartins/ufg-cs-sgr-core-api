@@ -10,7 +10,6 @@ import sgr.com.sgrcoreapi.service.user.dto.AddUserRequest;
 
 import java.time.LocalDate;
 import java.util.UUID;
-import sgr.com.sgrcoreapi.service.user.dto.UserUpdateRequest;
 
 @Entity
 @Table(name = "users")
@@ -55,10 +54,4 @@ public class User {
         this.password = addUserRequest.password();
         this.role = addUserRequest.role();
     }
-
-    public void updateUserInfo(UserUpdateRequest userUpdateRequest) {
-        this.name = userUpdateRequest.name();
-        this.email = userUpdateRequest.email();
-        this.phone = userUpdateRequest.phone();
-        this.birthDate = userUpdateRequest.birthDate();}
 }

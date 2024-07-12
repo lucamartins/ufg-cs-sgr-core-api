@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @Transactional
-    @PutMapping("/{userId}")
+    @PatchMapping("/{userId}")
     public ResponseEntity<NoDataApiResponse> updateUser(@PathVariable UUID userId, @RequestBody @Valid UserUpdateRequest userUpdateRequest) {
         userService.updateUser(userId, userUpdateRequest);
 
