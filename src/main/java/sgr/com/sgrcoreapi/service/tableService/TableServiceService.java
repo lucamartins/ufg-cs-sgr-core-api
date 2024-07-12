@@ -1,5 +1,7 @@
 package sgr.com.sgrcoreapi.service.tableService;
 
+import static sgr.com.sgrcoreapi.converters.tableservice.TableServiceConversionUtil.toClosingTableServiceDetails;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -12,6 +14,9 @@ import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.converters.table.TableConversionUtil;
 import sgr.com.sgrcoreapi.converters.tableservice.TableServiceConversionUtil;
 import sgr.com.sgrcoreapi.converters.user.UserConversionUtil;
+import sgr.com.sgrcoreapi.domain.order.OrderRepository;
+import sgr.com.sgrcoreapi.domain.order.OrderStatusEnum;
+import sgr.com.sgrcoreapi.domain.saleitem.SaleItem;
 import sgr.com.sgrcoreapi.domain.table.CustomerTableRepository;
 import sgr.com.sgrcoreapi.domain.tableservice.TableService;
 import sgr.com.sgrcoreapi.domain.tableservice.TableServiceRepository;
@@ -95,14 +100,38 @@ public class TableServiceService {
     }
 
     public ClosingTableServiceDetails getClosingTableServiceDetails(UUID tableServiceId) {
-        // TODO Pegar todos os pedidos e calcular o valor devido
-        return null;
+        var tableService = tableServiceRepository.findById(tableServiceId)
+                .orElseThrow(() -> new NotFoundException("Table service not found"));
+        var orders = tableService.getOrders();
+
+        var dueAmount = orders.stream()
+                .flatMap(order -> order.getSaleItems().stream())
+                .mapToDouble(SaleItem::getPrice)
+                .sum();
+
+        return toClosingTableServiceDetails(tableService, dueAmount);
     }
 
     public CloseTableServiceResponse closeTableService(UUID tableServiceId, CloseTableServiceRequest closeTableServiceRequest) {
-        // TODO Validar se possui pedido em andamento
-        // TODO fechar a conta, atualizar o status do serviço e liberar a mesa
+        var tableService = tableServiceRepository.findById(tableServiceId)
+                .orElseThrow(() -> new NotFoundException("Table service not found"));
+
+        var orders = tableService.getOrders();
+        boolean hasPendingOrders = orders.stream()
+                .anyMatch(order -> order.getStatus() == OrderStatusEnum.PENDING);
+
+        if (hasPendingOrders) {
+            throw new BadRequestException("Existem pedidos pendentes para este serviço de mesa.");
+        }
+
+        var dueAmount = orders.stream()
+                .flatMap(order -> order.getSaleItems().stream())
+                .mapToDouble(SaleItem::getPrice)
+                .sum();
+
+        tableService.setPaidAmount(dueAmount);
+        tableService.setStatus(TableServiceStatus.FINISHED);
+        tableService.getCustomerTable().changeAvailability();
         return null;
     }
-    // TODO Implement other methods
 }

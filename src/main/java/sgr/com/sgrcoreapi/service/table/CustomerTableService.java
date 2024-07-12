@@ -35,7 +35,7 @@ public class CustomerTableService {
         if(!customerTable.isAvailable()) {
             throw new InternalErrorException("Mesa não pode ser deletada pois está em uso");
         }
-        // TODO validar se atendimento está aberto
+
         customerTable.setDeleted(true);
         customerTableRepository.save(customerTable);
     }
