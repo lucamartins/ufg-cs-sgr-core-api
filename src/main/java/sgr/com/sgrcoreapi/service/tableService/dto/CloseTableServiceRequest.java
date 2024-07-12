@@ -1,4 +1,4 @@
 package sgr.com.sgrcoreapi.service.tableService.dto;
 
-public record CloseTableServiceRequest() {
+public record CloseTableServiceRequest(double paidAmount) {
 }

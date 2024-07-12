@@ -124,12 +124,11 @@ public class TableServiceService {
             throw new BadRequestException("Existem pedidos pendentes para este serviço de mesa.");
         }
 
-        var dueAmount = orders.stream()
-                .flatMap(order -> order.getSaleItems().stream())
-                .mapToDouble(SaleItem::getPrice)
-                .sum();
+        if(tableService.getStatus() == TableServiceStatus.FINISHED) {
+            throw new BadRequestException("Atendimento já finalizado");
+        }
 
-        tableService.setPaidAmount(dueAmount);
+        tableService.setPaidAmount(closeTableServiceRequest.paidAmount());
         tableService.setStatus(TableServiceStatus.FINISHED);
         tableService.getCustomerTable().changeAvailability();
         return null;
