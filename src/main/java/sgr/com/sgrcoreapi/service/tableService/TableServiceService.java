@@ -24,6 +24,7 @@ import sgr.com.sgrcoreapi.domain.user.UserRepository;
 import sgr.com.sgrcoreapi.domain.user.UserRoleEnum;
 import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
 import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
+import sgr.com.sgrcoreapi.service.order.dto.ClosingTableServiceOrderDetails;
 import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 import sgr.com.sgrcoreapi.service.tableService.dto.AddTableServiceRequest;
 import sgr.com.sgrcoreapi.service.tableService.dto.CloseTableServiceRequest;
@@ -107,7 +108,11 @@ public class TableServiceService {
                 .mapToDouble(SaleItem::getPrice)
                 .sum();
 
-        return toClosingTableServiceDetails(tableService, dueAmount);
+        var closingTableServiceOrderDetails = orders.stream()
+                .map(ClosingTableServiceOrderDetails::new)
+                .collect(Collectors.toList());
+
+        return toClosingTableServiceDetails(closingTableServiceOrderDetails, dueAmount);
     }
 
     public void closeTableService(UUID tableServiceId, CloseTableServiceRequest closeTableServiceRequest) {

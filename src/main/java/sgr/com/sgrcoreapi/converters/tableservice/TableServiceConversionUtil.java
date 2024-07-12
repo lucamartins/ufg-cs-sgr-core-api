@@ -1,7 +1,9 @@
 package sgr.com.sgrcoreapi.converters.tableservice;
 
+import java.util.List;
 import lombok.experimental.UtilityClass;
 import sgr.com.sgrcoreapi.domain.tableservice.TableService;
+import sgr.com.sgrcoreapi.service.order.dto.ClosingTableServiceOrderDetails;
 import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 import sgr.com.sgrcoreapi.service.tableService.dto.ClosingTableServiceDetails;
 import sgr.com.sgrcoreapi.service.tableService.dto.TableServiceDetails;
@@ -20,9 +22,9 @@ public class TableServiceConversionUtil {
         );
     }
 
-    public static ClosingTableServiceDetails toClosingTableServiceDetails(TableService tableService, double dueAmount) {
+    public static ClosingTableServiceDetails toClosingTableServiceDetails(List<ClosingTableServiceOrderDetails> closingTableServiceOrderDetails, double dueAmount) {
         return new ClosingTableServiceDetails(
-                tableService.getOrders(),
+                closingTableServiceOrderDetails,
                 dueAmount
         );
     }
