@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import sgr.com.sgrcoreapi.converters.table.TableConversionUtil;
 import sgr.com.sgrcoreapi.domain.table.CustomerTable;
 import sgr.com.sgrcoreapi.domain.table.CustomerTableRepository;
+import sgr.com.sgrcoreapi.domain.tableservice.TableServiceRepository;
+import sgr.com.sgrcoreapi.domain.tableservice.TableServiceStatus;
 import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
 import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
 import sgr.com.sgrcoreapi.service.table.dto.AddTableRequest;
@@ -18,6 +20,7 @@ import sgr.com.sgrcoreapi.service.table.dto.TableDetails;
 @RequiredArgsConstructor
 public class CustomerTableService {
     private final CustomerTableRepository customerTableRepository;
+    private final TableServiceRepository tableServiceRepository;
 
     public void createTable(AddTableRequest addTableRequest) {
         CustomerTable customerTable = new CustomerTable(addTableRequest);
@@ -48,5 +51,19 @@ public class CustomerTableService {
                 : customerTableRepository.findByIsDeletedFalse(pageable);
 
         return tablesPage.map(TableConversionUtil::toTableDetails);
+    }
+
+    public void updateTable(UUID tableId) {
+        CustomerTable customerTable = customerTableRepository.findByIdAndIsDeletedFalse(tableId)
+                .orElseThrow(NotFoundException::new);
+
+        boolean hasTableServiceInProgress = tableServiceRepository.existsByCustomerTableAndStatus(customerTable, TableServiceStatus.IN_PROGRESS);
+
+        if(hasTableServiceInProgress) {
+            throw new BadRequestException("Mesa não pode ser atualizada pois está em uso");
+        }
+
+        customerTable.changeAvailability();
+        customerTableRepository.save(customerTable);
     }
 }

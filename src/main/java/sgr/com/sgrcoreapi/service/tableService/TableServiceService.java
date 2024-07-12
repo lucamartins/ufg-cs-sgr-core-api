@@ -42,9 +42,9 @@ public class TableServiceService {
     public void createTableService(AddTableServiceRequest addTableServiceRequest) {
         TableService tableService = new TableService();
 
-        var table = customerTableRepository.findById(addTableServiceRequest.tableId())
+        var table = customerTableRepository.findByIdAndIsDeletedFalse(addTableServiceRequest.tableId())
                 .orElseThrow(() -> new BadRequestException("Table not found"));
-        var waiter = userRepository.findById(addTableServiceRequest.waiterId())
+        var waiter = userRepository.findByIdAndIsDeletedFalse(addTableServiceRequest.waiterId())
                 .orElseThrow(() -> new BadRequestException("Waiter not found"));
 
         if(!waiter.getRole().equals(UserRoleEnum.WAITER)) {
