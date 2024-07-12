@@ -12,7 +12,7 @@ import sgr.com.sgrcoreapi.infra.http.HttpHelper;
 import sgr.com.sgrcoreapi.infra.http.PagedApiResponse;
 import sgr.com.sgrcoreapi.service.order.dto.AddOrderRequest;
 import sgr.com.sgrcoreapi.service.order.dto.OrderDetails;
-import sgr.com.sgrcoreapi.service.order.dto.OrderService;
+import sgr.com.sgrcoreapi.service.order.OrderService;
 
 import java.util.UUID;
 
@@ -61,6 +61,18 @@ public class OrderController {
         var response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 order
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/deliver")
+    public ResponseEntity<ApiResponse<OrderDetails>> deliverOrder(@PathVariable UUID id) {
+        var deliveredOrder = service.deliverOrder(id);
+
+        var response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                deliveredOrder
         );
 
         return ResponseEntity.ok(response);

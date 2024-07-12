@@ -1,4 +1,4 @@
-package sgr.com.sgrcoreapi.service.order.dto;
+package sgr.com.sgrcoreapi.service.order;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,8 @@ import sgr.com.sgrcoreapi.domain.tableservice.TableServiceStatus;
 import sgr.com.sgrcoreapi.domain.user.UserRepository;
 import sgr.com.sgrcoreapi.infra.exception.custom.BadRequestException;
 import sgr.com.sgrcoreapi.infra.exception.custom.NotFoundException;
+import sgr.com.sgrcoreapi.service.order.dto.AddOrderRequest;
+import sgr.com.sgrcoreapi.service.order.dto.OrderDetails;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementRequest;
 import sgr.com.sgrcoreapi.service.stockitem.dto.StockMovementTypeEnum;
 
@@ -130,6 +132,26 @@ public class OrderService {
         var order = orderRepository
                 .findById(orderId)
                 .orElseThrow(NotFoundException::new);
+
+        return new OrderDetails(order);
+    }
+
+    public OrderDetails deliverOrder(UUID orderId) {
+        var order = orderRepository
+                .findById(orderId)
+                .orElseThrow(NotFoundException::new);
+
+        if (order.getTableService().getStatus() != TableServiceStatus.IN_PROGRESS) {
+            throw new BadRequestException("Table service must be in progress to update an order.");
+        }
+
+        if (order.getStatus() != OrderStatusEnum.PENDING) {
+            throw new BadRequestException("Order must be pending to be delivered.");
+        }
+
+        order.setStatus(OrderStatusEnum.DELIVERED);
+
+        orderRepository.save(order);
 
         return new OrderDetails(order);
     }
