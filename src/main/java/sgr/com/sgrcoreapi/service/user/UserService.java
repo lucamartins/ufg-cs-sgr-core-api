@@ -43,13 +43,13 @@ public class UserService {
     }
 
     public User getUserDetails(UUID userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+        return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(NotFoundException::new);
     }
 
     public void updateUser(UUID userId, UserUpdateRequest userUpdateRequest) {
         User user = userRepository
                 .findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+                .orElseThrow(NotFoundException::new);
 
         patchUser(user, userUpdateRequest);
         userRepository.save(user);
@@ -58,7 +58,7 @@ public class UserService {
     public void deleteUser(UUID userId) {
         User user = userRepository
                 .findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+                .orElseThrow(NotFoundException::new);
 
         boolean hasTableServiceInProgress = user.getTableServices().stream()
                 .anyMatch(tableService -> tableService.getStatus().equals(TableServiceStatus.IN_PROGRESS));

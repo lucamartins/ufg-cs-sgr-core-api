@@ -25,12 +25,12 @@ public class CustomerTableService {
     }
 
     public CustomerTable findTableById(UUID tableId) {
-        return customerTableRepository.findById(tableId).orElseThrow(() -> new NotFoundException("Mesa não encontrada"));
+        return customerTableRepository.findByIdAndIsDeletedFalse(tableId).orElseThrow(NotFoundException::new);
     }
 
     public void deleteTable(UUID tableId) {
         CustomerTable customerTable = customerTableRepository.findByIdAndIsDeletedFalse(tableId)
-                .orElseThrow(() -> new NotFoundException("Mesa não encontrada"));
+                .orElseThrow(NotFoundException::new);
 
         if(!customerTable.isAvailable()) {
             throw new BadRequestException("Mesa não pode ser deletada pois está em uso");

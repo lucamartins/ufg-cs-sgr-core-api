@@ -70,11 +70,11 @@ public class TableServiceService {
 
                     TableDetails tableDetails = customerTableRepository.findById(tableService.getCustomerTable().getId())
                             .map(TableConversionUtil::toTableDetails)
-                            .orElseThrow(() -> new NotFoundException("Table not found"));
+                            .orElseThrow(() -> new BadRequestException("Table not found"));
 
                     TableServiceResponsibleUser tableServiceResponsibleUser = userRepository.findById(tableService.getWaiter().getId())
                             .map(UserConversionUtil::toTableServiceResponsibleUser)
-                            .orElseThrow(() -> new NotFoundException("Waiter not found"));
+                            .orElseThrow(() -> new BadRequestException("Waiter not found"));
 
                     return TableServiceConversionUtil.toTableServiceDetails(tableService, tableDetails, tableServiceResponsibleUser);
                 })
@@ -85,22 +85,22 @@ public class TableServiceService {
 
     public TableServiceDetails getTableServiceDetails(UUID tableServiceId) {
         var tableService = tableServiceRepository.findById(tableServiceId)
-                .orElseThrow(() -> new NotFoundException("Table service not found"));
+                .orElseThrow(NotFoundException::new);
 
         var tableDetails = customerTableRepository.findById(tableService.getCustomerTable().getId())
                 .map(TableConversionUtil::toTableDetails)
-                .orElseThrow(() -> new NotFoundException("Table not found"));
+                .orElseThrow(() -> new BadRequestException("Table not found"));
 
         var tableServiceResponsibleUser = userRepository.findById(tableService.getWaiter().getId())
                 .map(UserConversionUtil::toTableServiceResponsibleUser)
-                .orElseThrow(() -> new NotFoundException("Waiter not found"));
+                .orElseThrow(() -> new BadRequestException("Waiter not found"));
 
         return TableServiceConversionUtil.toTableServiceDetails(tableService, tableDetails, tableServiceResponsibleUser);
     }
 
     public ClosingTableServiceDetails getClosingTableServiceDetails(UUID tableServiceId) {
         var tableService = tableServiceRepository.findById(tableServiceId)
-                .orElseThrow(() -> new NotFoundException("Table service not found"));
+                .orElseThrow(NotFoundException::new);
         var orders = tableService.getOrders();
 
         var dueAmount = orders.stream()
@@ -117,7 +117,7 @@ public class TableServiceService {
 
     public void closeTableService(UUID tableServiceId, CloseTableServiceRequest closeTableServiceRequest) {
         var tableService = tableServiceRepository.findById(tableServiceId)
-                .orElseThrow(() -> new NotFoundException("Table service not found"));
+                .orElseThrow(NotFoundException::new);
 
         var orders = tableService.getOrders();
         boolean hasPendingOrders = orders.stream()
